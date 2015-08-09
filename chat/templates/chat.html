@@ -1,0 +1,50 @@
+
+			<html>
+				<head>
+					<title>Chat</title>
+					<style type="text/css">
+						input { 
+							display: block;
+						}
+						ul {
+							list-style: none;
+						}
+					</style>
+				</head>
+				<body>
+
+					Let's chat! (from templates)
+					<ul id="message"></ul>
+					<form id="chatbox">
+						<textarea> </textarea>
+						<input type="submit" value="Send" />
+					</form>
+
+					<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+					<script type="text/javascript">
+						$(function(){
+							var socket = null;
+							var msgBox = $("#chatbox textarea");
+							var messages = $("#message");
+							$("#chatbox").submit(function(){
+								if(!msgBox.val()) return false;
+								if(!socket) {
+									alert("Error: There is no socket connection.");
+									return false;
+								}
+								socket.send(msgBox.val());
+								msgBox.val("");
+								return false;
+							});
+							if (!window["WebSocket"]) {
+								alert("Error: Your browser does not support web sockets.");
+							} else {
+								socket = new WebSocket("ws://{{.Host}}/room");
+								socket.onmessage = function(e) {
+									messages.append($("<li>").text(e.data));
+								} 
+							}
+						});
+					</script>
+				</body>
+			</html>
