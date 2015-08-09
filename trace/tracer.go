@@ -21,5 +21,5 @@ func (t *tracer) Trace(a...interface{}) {
 }
 
 func New(w io.Writer) Tracer {
-	return nil
+	return &tracer{out: w}
 }
