@@ -2,6 +2,7 @@ package trace
 
 import (
 	"testing"
+	"bytes"
 )
 
 func TestNew(t *testing.T) {
@@ -15,5 +16,4 @@ func TestNew(t *testing.T) {
 			t.Errorf("Trace should not write '%s'.", buf.String())
 		}
 	}
-	//t.Error("We haven't written our test yet")
 }
