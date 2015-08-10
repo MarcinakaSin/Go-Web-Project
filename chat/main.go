@@ -7,6 +7,11 @@ import (
 	"path/filepath"
 	"sync"
 	"flag"
+	"github.com/stretchr/gomniauth/providers/facebook"
+	"github.com/stretchr/gomniauth/providers/github"
+	"github.com/stretchr/gomniauth/providers/google"
+	//"../trace"
+	//"os"
 )
 
 //	templ represents a single template 
@@ -27,10 +32,28 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	flag.Parse()	// parse the flags
+	//	set up gomniauth
+	gomniauth.SetSecurityKey("this is my own crazy phrase not")
+	gomniauth.WithProviders(
+		facebook.New("key", "secret", "http://localhost:8080/auth/callback/facebook"),
+		github.New("key", "secret", "http://localhost:8080/auth/callback/github"),
+		google.New("AIzaSyAHdC_P8iM2SU3D5BEh5747tGb4Sr5xxj8", "3aoJeQ8Ub3l2Gfvz-wNIOXUo", "http://localhost:8080/auth/callback/google"),
+	)
 	r := newRoom()
+	//	output to the os.Stdout standard output pipe (prints output to the terminal)
+	//r.tracer = trace.New(os.Stdout)
 	// root
-	http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
+	http.Handle("/login", &templateHandler{filename: "login.html"})
+	http.HandleFunc("/auth/", loginHandler)
 	http.Handle("/room", r)
+
+	//	Directory used to store css and js files.
+	//http.Handle("/assets/",
+	//	http.StripPrefix("/assets",
+	//		http.FileServer(http.Dir("/path/to/assets/"))))
+
+
 	//	get the room going
 	go r.run()
 
