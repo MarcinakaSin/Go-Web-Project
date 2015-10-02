@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sync"
 	"flag"
+	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/facebook"
 	"github.com/stretchr/gomniauth/providers/github"
 	"github.com/stretchr/gomniauth/providers/google"

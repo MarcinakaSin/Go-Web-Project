@@ -41,7 +41,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalln("Error when trying to get provider", provider, "-", err)
 		}
-		loginURL, err := provider.GetBeginAuthURL(nil, nil)
+		//	GetBeginAuthURL(1st arg, 2nd arg)
+		//	1st arg - is a "state map of data" sending the user to a specific page after authantication.
+		//	2nd arg - data provided to the auth provider that modifies the behavior of the process.
+		loginURL, err := provider.GetBeginAuthURL(nil, nil)  
 		if err != nil {
 			log.Fatalln("Error when trying to GetBeginAuthURL for", provider, "-", err)
 		}
